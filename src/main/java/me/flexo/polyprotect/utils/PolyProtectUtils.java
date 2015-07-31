@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import me.flexo.polyprotect.PolyProtect;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 /**
@@ -32,10 +33,13 @@ public class PolyProtectUtils {
         while (true) {
             boolean regionFound = false;
             for (String worldName : worldNames) {
-                RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(worldName));
-                if (rgm.hasRegion(owner.getName() + "_" + j)) {
-                    regionFound = true;
-                    break;
+                World world = Bukkit.getServer().getWorld(worldName);
+                if (world != null) {
+                    RegionManager rgm = WGBukkit.getRegionManager(world);
+                    if (rgm.hasRegion(owner.getName() + "_" + j)) {
+                        regionFound = true;
+                        break;
+                    }
                 }
             }
             if (regionFound) {
@@ -47,13 +51,16 @@ public class PolyProtectUtils {
     }
 
     public static int countProtections(Player owner, List<String> worldNames) {
-        int j = 1;
+        int j = 0;
         for (int i = 0; i < 10; i++) {//TODO change max protections to config value
             for (String worldName : worldNames) {
-                RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(worldName));
-                if (rgm.hasRegion(owner.getName() + "_" + j)) {
-                    j++;
-                    break;
+                World world = Bukkit.getServer().getWorld(worldName);
+                if (world != null) {
+                    RegionManager rgm = WGBukkit.getRegionManager(world);
+                    if (rgm.hasRegion(owner.getName() + "_" + i)) {
+                        j++;
+                        break;
+                    }
                 }
             }
         }
@@ -164,7 +171,7 @@ public class PolyProtectUtils {
         try {
             rgm.save();
         } catch (StorageException ex) {
-             Bukkit.getLogger().log(Level.SEVERE, null, ex);
+            Bukkit.getLogger().log(Level.SEVERE, null, ex);
         }
         player.sendMessage(PolyProtect.pluginChatPrefix(true) + "The player has been added to the protection.");
     }
@@ -175,7 +182,7 @@ public class PolyProtectUtils {
         try {
             rgm.save();
         } catch (StorageException ex) {
-             Bukkit.getLogger().log(Level.SEVERE, null, ex);
+            Bukkit.getLogger().log(Level.SEVERE, null, ex);
         }
         player.sendMessage(PolyProtect.pluginChatPrefix(true) + "The player has been removed from the protection.");
     }

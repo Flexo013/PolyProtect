@@ -115,7 +115,7 @@ public class PolyProtectCommand implements CommandExecutor {
                     return false;
                 }
                 owner = (Player) Bukkit.getServer().getOfflinePlayer(args[1]);
-                if (!Arrays.asList("sel", "select", "selection").contains(args[1])) {
+                if (Arrays.asList("sel", "select", "selection").contains(args[1])) {
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
                         return true;
