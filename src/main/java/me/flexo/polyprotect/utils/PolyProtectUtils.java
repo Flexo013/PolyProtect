@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.flexo.polyprotect.PolyProtect;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

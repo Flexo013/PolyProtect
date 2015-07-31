@@ -6,13 +6,11 @@
 package me.flexo.polyprotect.command;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 import me.flexo.polyprotect.PolyProtect;
 import me.flexo.polyprotect.utils.PolyProtectUtils;
 import me.flexo.polyprotect.utils.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

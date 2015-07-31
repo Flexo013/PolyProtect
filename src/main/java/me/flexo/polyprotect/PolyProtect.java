@@ -1,9 +1,6 @@
 package me.flexo.polyprotect;
 
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.flexo.polyprotect.command.PolyProtectCommand;
@@ -85,6 +82,7 @@ public class PolyProtect extends JavaPlugin {
     /**
      * get the minecraft chat prefix for this plugin
      *
+     * @param color if true get the colored version of the prefix
      * @return the minecraft chat prefix for this plugin
      */
     public static String pluginChatPrefix(boolean color) {
