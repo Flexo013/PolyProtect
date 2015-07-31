@@ -2,3 +2,15 @@ name: ${project.artifactId}
 authors: ${project.authors}
 version: ${project.version}
 main: ${project.main}
+description: >
+             Make protections
+depend: [WorldGuard, WorldEdit]
+commands:
+    protect:
+        description: "Make a protection"
+        usage: "§6Use: /prot (help | create | define | remove | delete | select | allow | deny | addMember | removeMember)"
+        aliases: [prot]
+permissions:
+    pgc.prot.admin:
+        description: If you are allowed to create and remove protections
+        
