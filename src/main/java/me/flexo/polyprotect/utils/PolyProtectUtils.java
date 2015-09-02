@@ -113,7 +113,7 @@ public class PolyProtectUtils {
             player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
             return;
         }
-        player.performCommand("/region define " + owner.getName() + "_" + newRegionNumber + " " + owner.getName());
+        player.performCommand("region define " + owner.getName() + "_" + newRegionNumber + " " + owner.getName());
         String worldTypeName = "";
         switch (worldType) {
             case CREATIVE:
@@ -152,7 +152,7 @@ public class PolyProtectUtils {
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a region!");
             return;
         }
-        player.performCommand("/region remove " + protection.getId());
+        player.performCommand("region remove " + protection.getId());
         selectedRegionMap.remove(player.getName());
         player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected region has been removed.");
     }
@@ -162,7 +162,7 @@ public class PolyProtectUtils {
     }
 
     public static void sendProtectionInfo(Player player, String protectionId) {
-        player.performCommand("/region info " + protectionId);
+        player.performCommand("region info " + protectionId);
     }
 
     public static void addMemberToProtection(Player player, String newMemberName) {
