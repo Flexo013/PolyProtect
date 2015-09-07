@@ -172,6 +172,16 @@ public class PolyProtectCommand implements CommandExecutor {
                     PolyProtectUtils.removeMemberFromProtection(player, memberToRemove.getName());
                 }
                 return true;
+            case "help":
+                sender.sendMessage(ChatColor.YELLOW + " ---- " + ChatColor.GOLD + "PolyProtect Help" + ChatColor.YELLOW + " ---- \n"
+                        + ChatColor.GOLD + "/prot help" + ChatColor.RESET + ": Display this help page.\n"
+                        + ChatColor.GOLD + "/prot info <player>" + ChatColor.RESET + ": Protection info about player.\n"
+                        + ChatColor.GOLD + "/prot create <player>" + ChatColor.RESET + ": Create protection for player.\n"
+                        + ChatColor.GOLD + "/prot select" + ChatColor.RESET + ": Select current protection.\n"
+                        + ChatColor.GOLD + "/prot delete" + ChatColor.RESET + ": Delete the selected protection.\n"
+                        + ChatColor.GOLD + "/prot allow <player>" + ChatColor.RESET + ": Give player access to selected protection.\n"
+                        + ChatColor.GOLD + "/prot deny <player>" + ChatColor.RESET + ": Remove player from selected protection.\n");
+                return true;
             default:
                 return false;
         }
