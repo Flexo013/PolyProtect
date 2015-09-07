@@ -45,7 +45,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 player = (Player) sender;
 
                 if (!sender.hasPermission("pgc.prot.admin")) {
-                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to create regions!");
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to create protections!");
                     return true;
                 }
 
@@ -78,7 +78,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 player = (Player) sender;
 
                 if (!player.hasPermission("pgc.prot.admin")) {
-                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to create regions!");
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to select protections!");
                     return false;
                 }
 
@@ -97,7 +97,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 player = (Player) sender;
 
                 if (!player.hasPermission("pgc.prot.admin")) {
-                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to create regions!");
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to remove protections!");
                     return false;
                 }
 
@@ -108,7 +108,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 return true;
             case "info":
                 if (!sender.hasPermission("pgc.prot.admin")) {
-                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to create regions!");
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to view info!");
                     return false;
                 }
                 if (args.length != 2) {
