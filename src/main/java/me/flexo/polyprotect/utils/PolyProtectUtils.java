@@ -40,7 +40,7 @@ public class PolyProtectUtils {
 
     private static final Map<String, ProtectedRegion> selectedRegionMap = new HashMap<>();
 
-    public static int newProtectionNumber(Player owner, List<String> worldNames) {
+    public static int newProtectionNumber(String owner, List<String> worldNames) {
         int j = 1;
         while (true) {
             boolean regionFound = false;
@@ -48,7 +48,7 @@ public class PolyProtectUtils {
                 World world = Bukkit.getServer().getWorld(worldName);
                 if (world != null) {
                     RegionManager rgm = WGBukkit.getRegionManager(world);
-                    if (rgm.hasRegion(owner.getName() + "_" + j)) {
+                    if (rgm.hasRegion(owner + "_" + j)) {
                         regionFound = true;
                         break;
                     }
@@ -79,44 +79,44 @@ public class PolyProtectUtils {
         return j;
     }
 
-    public static void createProtection(WorldType worldType, Player player, Player owner, int newRegionNumber) {
+    public static void createProtection(WorldType worldType, Player player, OfflinePlayer owner, int newRegionNumber) {
 
-        if (!owner.hasPermission("pgc.tag.member") && newRegionNumber > 0) {
+        if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.member") && newRegionNumber > 0) {
             player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
             return;
         }
         switch (worldType) {
             case CREATIVE:
-                if (!owner.hasPermission("pgc.tag.builder") && newRegionNumber > 2) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.builder") && newRegionNumber > 2) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.craftsman") && newRegionNumber > 4) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.craftsman") && newRegionNumber > 4) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.designer") && newRegionNumber > 6) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.designer") && newRegionNumber > 6) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.architect") && newRegionNumber > 8) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.architect") && newRegionNumber > 8) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
             case SURVIVAL:
-                if (!owner.hasPermission("pgc.tag.resident") && newRegionNumber > 2) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.resident") && newRegionNumber > 2) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.wealthy") && newRegionNumber > 4) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.wealthy") && newRegionNumber > 4) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.millionair") && newRegionNumber > 6) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.millionair") && newRegionNumber > 6) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
-                if (!owner.hasPermission("pgc.tag.royalty") && newRegionNumber > 8) {
+                if (!PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.royalty") && newRegionNumber > 8) {
                     player.sendMessage("Could not create region: " + owner.getName() + " has reached the maximum amount of protections");
                     return;
                 }
@@ -184,15 +184,38 @@ public class PolyProtectUtils {
 
     public static void removeMemberFromProtection(Player sender, String memberToRemove) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
-        selectedRegionMap.get(sender.getName()).getMembers().removePlayer(memberToRemove);
-        try {
-            rgm.save();
-        } catch (StorageException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, null, ex);
-        }
-        sender.sendMessage(PolyProtect.pluginChatPrefix(true) + "The player has been removed from the protection.");
+        addMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
+        
     }
 
+    public static void removeMemberFromName(String name, final ProtectedRegion region, final Player sender) {
+        // Google's Guava library provides useful concurrency classes.
+        // The following executor would be re-used in your plugin.
+        ListeningExecutorService executor
+                = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+
+        String[] input = new String[]{name};
+        ProfileService profiles = WGBukkit.getPlugin().getProfileService();
+        DomainInputResolver resolver = new DomainInputResolver(profiles, input);
+        resolver.setLocatorPolicy(UserLocatorPolicy.UUID_AND_NAME);
+        ListenableFuture<DefaultDomain> future = executor.submit(resolver);
+
+        // Add a callback using Guava
+        Futures.addCallback(future, new FutureCallback<DefaultDomain>() {
+            @Override
+            public void onSuccess(DefaultDomain result) {
+                region.getMembers().removeAll(result);
+                sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The player has been removed from the protection.");
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Bukkit.getLogger().log(Level.WARNING, null, throwable);
+                sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Failed removing player from protection. Please contact an admin.");
+            }
+        });
+    }
+    
     public static void addMemberFromName(String name, final ProtectedRegion region, final Player sender) {
         // Google's Guava library provides useful concurrency classes.
         // The following executor would be re-used in your plugin.
@@ -209,8 +232,8 @@ public class PolyProtectUtils {
         Futures.addCallback(future, new FutureCallback<DefaultDomain>() {
             @Override
             public void onSuccess(DefaultDomain result) {
-                region.getOwners().addAll(result);
-                sender.sendMessage(PolyProtect.pluginChatPrefix(true) + "The player has been added to the protection.");
+                region.getMembers().addAll(result);
+                sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The player has been added to the protection.");
             }
 
             @Override
