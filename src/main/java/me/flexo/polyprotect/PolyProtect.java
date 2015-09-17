@@ -20,7 +20,8 @@ public class PolyProtect extends JavaPlugin {
     private Plugin vault = null;
     private Permission permission = null;
     private static ArrayList<String> creativeWorlds = new ArrayList<>();
-    private static ArrayList<String> survivalWorlds = new ArrayList<>();
+    public static ArrayList<String> survivalWorlds = new ArrayList<>();
+    //##lelijk
 
     /**
      * Gets a plugin
@@ -35,6 +36,14 @@ public class PolyProtect extends JavaPlugin {
             log.log(Level.WARNING, "Could not find plugin \"{0}\"!", pluginName);
             return null;
         }
+    }
+    
+    public static PolyProtect getPlugin(){
+        return (PolyProtect) Bukkit.getPluginManager().getPlugin("PolyProtect");
+    }
+    
+    public Permission getPermission(){
+        return permission;
     }
 
     @Override

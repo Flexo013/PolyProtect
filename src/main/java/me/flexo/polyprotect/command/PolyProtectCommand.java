@@ -11,6 +11,7 @@ import me.flexo.polyprotect.utils.PolyProtectUtils;
 import me.flexo.polyprotect.utils.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,6 +36,7 @@ public class PolyProtectCommand implements CommandExecutor {
             return false;
         }
         Player player, owner;
+        OfflinePlayer offlineOwner;
         switch (args[0].toLowerCase()) {
             case "create":
             case "define":
@@ -127,13 +129,13 @@ public class PolyProtectCommand implements CommandExecutor {
                     return true;
                 }
 
-                owner = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
-                if (owner.hasPlayedBefore()) {
-                    int survivalCount = PolyProtectUtils.countProtections(owner, PolyProtect.getSurvivalWorlds());
-                    int creativeCount = PolyProtectUtils.countProtections(owner, PolyProtect.getCreativeWorlds());
-                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.SURVIVAL);
-                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
-                    sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
+                offlineOwner = Bukkit.getServer().getOfflinePlayer(args[1]);
+                if (offlineOwner.hasPlayedBefore()) {
+                    int survivalCount = PolyProtectUtils.countProtections(offlineOwner.getName(), PolyProtect.getSurvivalWorlds());
+                    int creativeCount = PolyProtectUtils.countProtections(offlineOwner.getName(), PolyProtect.getCreativeWorlds());
+                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(offlineOwner, WorldType.SURVIVAL);
+                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(offlineOwner, WorldType.CREATIVE);
+                    sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + offlineOwner.getName() + ChatColor.BLUE + " ----\n"
                             + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
                             + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
                             + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
