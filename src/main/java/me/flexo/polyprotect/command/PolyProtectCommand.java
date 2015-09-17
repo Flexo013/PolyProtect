@@ -52,7 +52,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                owner = (Player) plugin.getServer().getOfflinePlayer(args[1]);
+                owner = plugin.getServer().getOfflinePlayer(args[1]).getPlayer();
 
                 if (!owner.hasPlayedBefore()) {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + owner.getDisplayName() + " has never player before!");
@@ -89,6 +89,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 PolyProtectUtils.selectProtection(player, true);
                 return true;
             case "delete":
+            case "del":
             case "remove":
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
@@ -107,6 +108,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 PolyProtectUtils.removeProtection(player);
                 return true;
             case "info":
+            case "i":
                 if (!sender.hasPermission("pgc.prot.admin")) {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to view info!");
                     return false;
@@ -114,7 +116,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                owner = (Player) Bukkit.getServer().getOfflinePlayer(args[1]);
+
                 if (Arrays.asList("sel", "select", "selection").contains(args[1])) {
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
@@ -122,22 +124,27 @@ public class PolyProtectCommand implements CommandExecutor {
                     }
                     player = (Player) sender;
                     PolyProtectUtils.sendProtectionInfo(player);
-                } else if (owner.hasPlayedBefore()) {
+                    return true;
+                }
+
+                owner = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+                if (owner.hasPlayedBefore()) {
                     int survivalCount = PolyProtectUtils.countProtections(owner, PolyProtect.getSurvivalWorlds());
                     int creativeCount = PolyProtectUtils.countProtections(owner, PolyProtect.getCreativeWorlds());
                     sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
                             + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
                             + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + "\n"
                             + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount);
-                } else {
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
-                        return true;
-                    }
-                    player = (Player) sender;
-                    PolyProtectUtils.sendProtectionInfo(player, args[1]);
+                    return true;
                 }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
+                    return true;
+                }
+                player = (Player) sender;
+                PolyProtectUtils.sendProtectionInfo(player, args[1]);
                 return true;
+                
             case "allow":
             case "addmember":
                 if (!(sender instanceof Player)) {
@@ -149,7 +156,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                Player newMember = (Player) Bukkit.getServer().getOfflinePlayer(args[1]);
+                Player newMember = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
                 if (newMember.hasPlayedBefore()) {
                     PolyProtectUtils.selectProtection(player, false);
                     PolyProtectUtils.addMemberToProtection(player, newMember.getName());
@@ -166,7 +173,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                Player memberToRemove = (Player) Bukkit.getServer().getOfflinePlayer(args[1]);
+                Player memberToRemove = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
                 if (memberToRemove.hasPlayedBefore()) {
                     PolyProtectUtils.selectProtection(player, false);
                     PolyProtectUtils.removeMemberFromProtection(player, memberToRemove.getName());
