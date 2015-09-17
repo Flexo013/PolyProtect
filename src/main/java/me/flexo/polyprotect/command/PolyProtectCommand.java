@@ -131,10 +131,12 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (owner.hasPlayedBefore()) {
                     int survivalCount = PolyProtectUtils.countProtections(owner, PolyProtect.getSurvivalWorlds());
                     int creativeCount = PolyProtectUtils.countProtections(owner, PolyProtect.getCreativeWorlds());
+                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.SURVIVAL);
+                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
                     sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
                             + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
-                            + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + "\n"
-                            + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount);
+                            + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
+                            + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
                     return true;
                 }
                 if (!(sender instanceof Player)) {
@@ -182,6 +184,7 @@ public class PolyProtectCommand implements CommandExecutor {
             case "help":
                 sender.sendMessage(ChatColor.YELLOW + " ---- " + ChatColor.GOLD + "PolyProtect Help" + ChatColor.YELLOW + " ---- \n"
                         + ChatColor.GOLD + "/prot help" + ChatColor.RESET + ": Display this help page.\n"
+                        + ChatColor.GOLD + "/prot info selection" + ChatColor.RESET + ": Display info about selection.\n"
                         + ChatColor.GOLD + "/prot info <player>" + ChatColor.RESET + ": Protection info about player.\n"
                         + ChatColor.GOLD + "/prot create <player>" + ChatColor.RESET + ": Create protection for player.\n"
                         + ChatColor.GOLD + "/prot select" + ChatColor.RESET + ": Select current protection.\n"
