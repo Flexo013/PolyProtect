@@ -138,7 +138,13 @@ public class PolyProtectUtils {
     }
 
     public static void selectProtection(Player player, boolean notify) {
-        RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(player.getWorld().getName()));
+        World world = Bukkit.getServer().getWorld(player.getWorld().getName());
+        if (!PolyProtect.survivalWorlds.contains(world.getName()) && !PolyProtect.creativeWorlds.contains(world.getName())) {
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You cannot use PolyProtect in this world!");
+            return;
+        }
+        
+        RegionManager rgm = WGBukkit.getRegionManager(world);
         ApplicableRegionSet ars = rgm.getApplicableRegions(player.getLocation());
         if (ars.size() == 0) {
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are not within a protection!");
@@ -152,7 +158,7 @@ public class PolyProtectUtils {
 
         ProtectedRegion ar = ars.iterator().next();
         
-        if (!ar.getId().matches("(\\w)*_(\\d)*")){
+        if (!ar.getId().matches("((\\w)*_(\\d)*)")){
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "This region cannot be selected!");
             return;
         }

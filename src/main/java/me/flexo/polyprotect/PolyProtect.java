@@ -19,7 +19,7 @@ public class PolyProtect extends JavaPlugin {
     private static final Logger log = Bukkit.getLogger();
     private Plugin vault = null;
     private Permission permission = null;
-    private static ArrayList<String> creativeWorlds = new ArrayList<>();
+    public static ArrayList<String> creativeWorlds = new ArrayList<>();
     public static ArrayList<String> survivalWorlds = new ArrayList<>();
     //##lelijk
 
