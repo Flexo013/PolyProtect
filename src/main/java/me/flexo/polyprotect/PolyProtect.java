@@ -21,7 +21,6 @@ public class PolyProtect extends JavaPlugin {
     private Permission permission = null;
     public static ArrayList<String> creativeWorlds = new ArrayList<>();
     public static ArrayList<String> survivalWorlds = new ArrayList<>();
-    //##lelijk
 
     /**
      * Gets a plugin

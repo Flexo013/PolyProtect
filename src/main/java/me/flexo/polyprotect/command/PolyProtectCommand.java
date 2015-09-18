@@ -5,13 +5,18 @@
  */
 package me.flexo.polyprotect.command;
 
-import java.util.Arrays;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.flexo.polyprotect.PolyProtect;
 import me.flexo.polyprotect.utils.PolyProtectUtils;
 import me.flexo.polyprotect.utils.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -111,21 +116,60 @@ public class PolyProtectCommand implements CommandExecutor {
                 return true;
             case "info":
             case "i":
+                if (args.length != 1) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Correct usage: /prot info!");
+                    return true;
+                }
+
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "You are not in a protection, Johnsole...");
+                    return true;
+                }
+                player = (Player) sender;
+
+                World world = Bukkit.getServer().getWorld(player.getWorld().getName());
+                if (!PolyProtect.survivalWorlds.contains(world.getName()) && !PolyProtect.creativeWorlds.contains(world.getName())) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You cannot use PolyProtect in this world!");
+                    return true;
+                }
+
+                RegionManager rgm = WGBukkit.getRegionManager(world);
+                ApplicableRegionSet ars = rgm.getApplicableRegions(player.getLocation());
+                if (ars.size() == 0) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are not within a protection!");
+                    return true;
+                }
+
+                if (ars.size() >= 2) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are standing in intersecting protections!");
+                    return true;
+                }
+
+                ProtectedRegion ar = ars.iterator().next();
+
+                if (!ar.getId().matches("((\\w)*_(\\d)*)")) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are not within a PolyProtect protection!");
+                    return true;
+                }
+
+                LocalPlayer localplayer = WGBukkit.getPlugin().wrapPlayer(player);
+                if (!ar.isOwner(localplayer) || !player.hasPermission("pgc.prot.admin") || !ar.isMember(localplayer)) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to view info of this region!");
+                    return true;
+                }
+                PolyProtectUtils.sendProtectionInfo(player);
+                return true;
+
+            case "playerinfo":
+            case "pinfo":
+            case "playeri":
+            case "pi":
                 if (!sender.hasPermission("pgc.prot.admin")) {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to view info!");
                     return true;
                 }
                 if (args.length != 2) {
-                    return false;
-                }
-
-                if (Arrays.asList("sel", "select", "selection").contains(args[1])) {
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
-                        return true;
-                    }
-                    player = (Player) sender;
-                    PolyProtectUtils.sendProtectionInfo(player);
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Incorrect usage of /prot player info!");
                     return true;
                 }
 
@@ -141,14 +185,9 @@ public class PolyProtectCommand implements CommandExecutor {
                             + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
                     return true;
                 }
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
-                    return true;
-                }
-                player = (Player) sender;
-                PolyProtectUtils.sendProtectionInfo(player, args[1]);
-                return true;
-                
+                sender.sendMessage(PolyProtect.pluginChatPrefix(true) + "Something went terribly wrong...");
+                return false;
+
             case "allow":
             case "addmember":
                 if (!(sender instanceof Player)) {

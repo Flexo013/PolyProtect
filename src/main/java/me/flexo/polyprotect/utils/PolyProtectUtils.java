@@ -201,7 +201,6 @@ public class PolyProtectUtils {
     public static void removeMemberFromProtection(Player sender, String memberToRemove) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
         addMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
-
     }
 
     public static void removeMemberFromName(String name, final ProtectedRegion region, final Player sender) {
