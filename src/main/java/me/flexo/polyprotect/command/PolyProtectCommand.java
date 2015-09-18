@@ -153,7 +153,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 }
 
                 LocalPlayer localplayer = WGBukkit.getPlugin().wrapPlayer(player);
-                if (!ar.isOwner(localplayer) || !player.hasPermission("pgc.prot.admin") || !ar.isMember(localplayer)) {
+                if (!ar.isOwner(localplayer) && !player.hasPermission("pgc.prot.admin") && !ar.isMember(localplayer)) {
                     player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to view info of this region!");
                     return true;
                 }
