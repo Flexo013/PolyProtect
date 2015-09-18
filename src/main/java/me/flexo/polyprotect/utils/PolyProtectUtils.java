@@ -10,11 +10,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.util.DomainInputResolver;
 import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolicy;
@@ -22,7 +22,6 @@ import com.sk89q.worldguard.util.profile.resolver.ProfileService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import me.flexo.polyprotect.PolyProtect;
@@ -152,6 +151,17 @@ public class PolyProtectUtils {
         }
 
         ProtectedRegion ar = ars.iterator().next();
+        
+        if (!ar.getId().matches("")){
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "This region cannot be selected!");
+            return;
+        }
+        
+        LocalPlayer localplayer = WGBukkit.getPlugin().wrapPlayer(player);
+        if (!ar.isOwner(localplayer) || !player.hasPermission("pgc.prot.admin")) {
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to edit this region!");
+            return;
+        }
         selectedRegionMap.put(player.getName(), ar);
         if (notify) {
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "You selected the protection: " + ar.getId());
@@ -185,7 +195,7 @@ public class PolyProtectUtils {
     public static void removeMemberFromProtection(Player sender, String memberToRemove) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
         addMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
-        
+
     }
 
     public static void removeMemberFromName(String name, final ProtectedRegion region, final Player sender) {
@@ -215,7 +225,7 @@ public class PolyProtectUtils {
             }
         });
     }
-    
+
     public static void addMemberFromName(String name, final ProtectedRegion region, final Player sender) {
         // Google's Guava library provides useful concurrency classes.
         // The following executor would be re-used in your plugin.
@@ -243,26 +253,46 @@ public class PolyProtectUtils {
             }
         });
     }
-    
-    public static int getMaxProtectionCount(OfflinePlayer player, WorldType worldtype){
-        if (player.isOp()) return -1;
+
+    public static int getMaxProtectionCount(OfflinePlayer player, WorldType worldtype) {
+        if (player.isOp()) {
+            return -1;
+        }
         switch (worldtype) {
             case SURVIVAL:
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.royalty")) return 10;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.millionaire")) return 8;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.wealthy")) return 6;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.resident")) return 4;
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.royalty")) {
+                    return 10;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.millionaire")) {
+                    return 8;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.wealthy")) {
+                    return 6;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.resident")) {
+                    return 4;
+                }
                 break;
             case CREATIVE:
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.architect")) return 10;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.designer")) return 8;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.craftsman")) return 6;
-                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.builder")) return 4;
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.architect")) {
+                    return 10;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.designer")) {
+                    return 8;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.craftsman")) {
+                    return 6;
+                }
+                if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.builder")) {
+                    return 4;
+                }
                 break;
             default:
                 return -2;
         }
-        if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.member")) return 2;
+        if (PolyProtect.getPlugin().getPermission().playerHas(PolyProtect.survivalWorlds.get(0), player, "pgc.tag.member")) {
+            return 2;
+        }
         return 0;
     }
 }

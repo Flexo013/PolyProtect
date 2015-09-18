@@ -35,8 +35,8 @@ public class PolyProtectCommand implements CommandExecutor {
         if (args.length == 0) {
             return false;
         }
-        Player player, owner;
-        OfflinePlayer offlineOwner;
+        Player player;
+        OfflinePlayer owner;
         switch (args[0].toLowerCase()) {
             case "create":
             case "define":
@@ -54,18 +54,18 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                owner = plugin.getServer().getOfflinePlayer(args[1]).getPlayer();
+                owner = plugin.getServer().getOfflinePlayer(args[1]);
 
                 if (!owner.hasPlayedBefore()) {
-                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + owner.getDisplayName() + " has never player before!");
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + owner.getName() + " has never player before!");
                     return true;
                 }
 
                 if (PolyProtect.getCreativeWorlds().contains(player.getWorld().getName())) {
-                    int newRegionNumber = PolyProtectUtils.newProtectionNumber(owner, PolyProtect.getCreativeWorlds());
+                    int newRegionNumber = PolyProtectUtils.newProtectionNumber(owner.getName(), PolyProtect.getCreativeWorlds());
                     PolyProtectUtils.createProtection(WorldType.CREATIVE, player, owner, newRegionNumber);
                 } else if (PolyProtect.getSurvivalWorlds().contains(player.getWorld().getName())) {
-                    int newRegionNumber = PolyProtectUtils.newProtectionNumber(owner, PolyProtect.getSurvivalWorlds());
+                    int newRegionNumber = PolyProtectUtils.newProtectionNumber(owner.getName(), PolyProtect.getSurvivalWorlds());
                     PolyProtectUtils.createProtection(WorldType.SURVIVAL, player, owner, newRegionNumber);
                 } else {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.YELLOW + "You cannot create protections in this world.");
@@ -129,13 +129,13 @@ public class PolyProtectCommand implements CommandExecutor {
                     return true;
                 }
 
-                offlineOwner = Bukkit.getServer().getOfflinePlayer(args[1]);
-                if (offlineOwner.hasPlayedBefore()) {
-                    int survivalCount = PolyProtectUtils.countProtections(offlineOwner.getName(), PolyProtect.getSurvivalWorlds());
-                    int creativeCount = PolyProtectUtils.countProtections(offlineOwner.getName(), PolyProtect.getCreativeWorlds());
-                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(offlineOwner, WorldType.SURVIVAL);
-                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(offlineOwner, WorldType.CREATIVE);
-                    sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + offlineOwner.getName() + ChatColor.BLUE + " ----\n"
+                owner = Bukkit.getServer().getOfflinePlayer(args[1]);
+                if (owner.hasPlayedBefore()) {
+                    int survivalCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getSurvivalWorlds());
+                    int creativeCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getCreativeWorlds());
+                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.SURVIVAL);
+                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
+                    sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
                             + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
                             + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
                             + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
@@ -160,7 +160,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                Player newMember = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+                OfflinePlayer newMember = Bukkit.getServer().getOfflinePlayer(args[1]);
                 if (newMember.hasPlayedBefore()) {
                     PolyProtectUtils.selectProtection(player, false);
                     PolyProtectUtils.addMemberToProtection(player, newMember.getName());
@@ -177,7 +177,7 @@ public class PolyProtectCommand implements CommandExecutor {
                 if (args.length != 2) {
                     return false;
                 }
-                Player memberToRemove = Bukkit.getServer().getOfflinePlayer(args[1]).getPlayer();
+                OfflinePlayer memberToRemove = Bukkit.getServer().getOfflinePlayer(args[1]);
                 if (memberToRemove.hasPlayedBefore()) {
                     PolyProtectUtils.selectProtection(player, false);
                     PolyProtectUtils.removeMemberFromProtection(player, memberToRemove.getName());
