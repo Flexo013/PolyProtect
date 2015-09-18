@@ -164,8 +164,8 @@ public class PolyProtectUtils {
         }
         
         LocalPlayer localplayer = WGBukkit.getPlugin().wrapPlayer(player);
-        if (!ar.isOwner(localplayer) || !player.hasPermission("pgc.prot.admin")) {
-            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to edit this region!");
+        if (!ar.isOwner(localplayer) && !player.hasPermission("pgc.prot.admin")) {
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to edit this protection!");
             return;
         }
         selectedRegionMap.put(player.getName(), ar);
@@ -177,12 +177,12 @@ public class PolyProtectUtils {
     public static void removeProtection(Player player) {
         ProtectedRegion protection = selectedRegionMap.get(player.getName());
         if (protection == null) {
-            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a region!");
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a protection!");
             return;
         }
         player.performCommand("region remove " + protection.getId());
         selectedRegionMap.remove(player.getName());
-        player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected region has been removed.");
+        player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been removed.");
     }
 
     public static void sendProtectionInfo(Player player) {
