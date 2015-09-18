@@ -169,24 +169,29 @@ public class PolyProtectCommand implements CommandExecutor {
                     return true;
                 }
                 if (args.length != 2) {
-                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Incorrect usage of /prot player info!");
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Incorrect usage of /prot playerinfo!");
                     return true;
                 }
 
                 owner = Bukkit.getServer().getOfflinePlayer(args[1]);
                 if (owner.hasPlayedBefore()) {
-                    int survivalCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getSurvivalWorlds());
-                    int creativeCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getCreativeWorlds());
-                    int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.SURVIVAL);
-                    int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
-                    sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
-                            + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
-                            + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
-                            + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
+                    sendPlayerInfo(owner, sender);
                     return true;
                 }
                 sender.sendMessage(PolyProtect.pluginChatPrefix(true) + "Something went terribly wrong...");
                 return false;
+            case "mine":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
+                    return true;
+                }
+                owner = Bukkit.getServer().getOfflinePlayer(sender.getName());
+                if (args.length != 1) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "Incorrect usage of /prot mine!");
+                    return true;
+                }
+                sendPlayerInfo(owner, sender);
+                return true;
 
             case "allow":
             case "addmember":
@@ -223,20 +228,43 @@ public class PolyProtectCommand implements CommandExecutor {
                 }
                 return true;
             case "help":
-                sender.sendMessage(ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot help" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Sends you this overview.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot info" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See info about the protection you are standing in.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot playerinfo [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info from the specified player.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot create [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Create a protection for the specified player using your WorldEdit selection.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot delete" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Delete the selected protection.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
-                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
-                        + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");
+                if (!sender.hasPermission("pgc.prot.admin")) {
+                    sender.sendMessage(ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot help" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Sends you this overview.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot info" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See info about the protection you are standing in.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot mine" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info about yourself.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
+                            + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");
+                } else {
+                    sender.sendMessage(ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot help" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Sends you this overview.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot info" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See info about the protection you are standing in.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot mine" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info about yourself.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot playerinfo [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info about the specified player.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot create [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Create a protection for the specified player using your WorldEdit selection.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot delete" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Delete the selected protection.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
+                            + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");
+                }
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void sendPlayerInfo(OfflinePlayer owner, CommandSender sender) {
+        int survivalCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getSurvivalWorlds());
+        int creativeCount = PolyProtectUtils.countProtections(owner.getName(), PolyProtect.getCreativeWorlds());
+        int maxSurvivalCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.SURVIVAL);
+        int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
+        sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
+                + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
+                + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
+                + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
     }
 
     public static boolean isInteger(String str) {
