@@ -147,7 +147,7 @@ public class PolyProtectUtils {
         }
 
         if (ars.size() >= 2) {
-            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are standing in intersecting protection!");
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You are standing in intersecting protections!");
             return;
         }
 
