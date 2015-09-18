@@ -223,15 +223,16 @@ public class PolyProtectCommand implements CommandExecutor {
                 }
                 return true;
             case "help":
-                sender.sendMessage(ChatColor.YELLOW + " ---- " + ChatColor.GOLD + "PolyProtect Help" + ChatColor.YELLOW + " ---- \n"
-                        + ChatColor.GOLD + "/prot help" + ChatColor.RESET + ": Display this help page.\n"
-                        + ChatColor.GOLD + "/prot info selection" + ChatColor.RESET + ": Display info about selection.\n"
-                        + ChatColor.GOLD + "/prot info <player>" + ChatColor.RESET + ": Protection info about player.\n"
-                        + ChatColor.GOLD + "/prot create <player>" + ChatColor.RESET + ": Create protection for player.\n"
-                        + ChatColor.GOLD + "/prot select" + ChatColor.RESET + ": Select current protection.\n"
-                        + ChatColor.GOLD + "/prot delete" + ChatColor.RESET + ": Delete the selected protection.\n"
-                        + ChatColor.GOLD + "/prot allow <player>" + ChatColor.RESET + ": Give player access to selected protection.\n"
-                        + ChatColor.GOLD + "/prot deny <player>" + ChatColor.RESET + ": Remove player from selected protection.\n");
+                sender.sendMessage(ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot help" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Sends you this overview.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot info" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See info about the protection you are standing in.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot playerinfo [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info from the specified player.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot create [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Create a protection for the specified player using your WorldEdit selection.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot delete" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Delete the selected protection.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
+                        + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
+                        + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");
                 return true;
             default:
                 return false;
