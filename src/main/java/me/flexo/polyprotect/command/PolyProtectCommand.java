@@ -233,7 +233,6 @@ public class PolyProtectCommand implements CommandExecutor {
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot help" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Sends you this overview.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot info" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See info about the protection you are standing in.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot mine" + ChatColor.GRAY + ": " + ChatColor.AQUA + "See protection info about yourself.\n"
-                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
                             + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");
