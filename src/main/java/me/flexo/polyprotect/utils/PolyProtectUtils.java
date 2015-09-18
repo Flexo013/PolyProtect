@@ -152,7 +152,7 @@ public class PolyProtectUtils {
 
         ProtectedRegion ar = ars.iterator().next();
         
-        if (!ar.getId().matches("")){
+        if (!ar.getId().matches("(\\w)*_(\\d)*")){
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "This region cannot be selected!");
             return;
         }

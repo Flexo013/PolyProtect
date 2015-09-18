@@ -101,7 +101,7 @@ public class PolyProtectCommand implements CommandExecutor {
 
                 if (!player.hasPermission("pgc.prot.admin")) {
                     player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to remove protections!");
-                    return false;
+                    return true;
                 }
 
                 if (args.length != 1) {
@@ -113,7 +113,7 @@ public class PolyProtectCommand implements CommandExecutor {
             case "i":
                 if (!sender.hasPermission("pgc.prot.admin")) {
                     sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to view info!");
-                    return false;
+                    return true;
                 }
                 if (args.length != 2) {
                     return false;
