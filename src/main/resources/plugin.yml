@@ -8,7 +8,7 @@ depend: [WorldGuard, WorldEdit]
 commands:
     protect:
         description: "Make a protection"
-        usage: "§6Use: /prot (help | info | create | define | remove | delete | select | allow | deny | addMember | removeMember)"
+        usage: "§cDo /prot help."
         aliases: [prot]
 permissions:
     pgc.prot.admin:
