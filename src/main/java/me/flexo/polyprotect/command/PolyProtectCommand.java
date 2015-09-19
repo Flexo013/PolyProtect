@@ -157,7 +157,7 @@ public class PolyProtectCommand implements CommandExecutor {
                     player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You do not have permission to view info of this region!");
                     return true;
                 }
-                PolyProtectUtils.sendProtectionInfo(player);
+                PolyProtectUtils.sendProtectionInfo(player, ar.getId());
                 return true;
 
             case "playerinfo":
