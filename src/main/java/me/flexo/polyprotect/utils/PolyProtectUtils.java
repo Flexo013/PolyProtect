@@ -135,6 +135,10 @@ public class PolyProtectUtils {
                 break;
         }
         Bukkit.getLogger().log(Level.INFO, "{0} just created a new {1} protection for {2}.", new Object[]{player.getName(), worldTypeName, owner.getName()});
+        if (owner.isOnline()){
+            Player onlineOwner = owner.getPlayer();
+            onlineOwner.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + player.getName() + " has created a new protection for you!");
+        }
     }
 
     public static void selectProtection(Player player, boolean notify) {
