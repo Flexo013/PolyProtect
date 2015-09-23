@@ -200,7 +200,7 @@ public class PolyProtectUtils {
 
     public static void removeMemberFromProtection(Player sender, String memberToRemove) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
-        addMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
+        removeMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
     }
 
     public static void removeMemberFromName(String name, final ProtectedRegion region, final Player sender) {
@@ -240,7 +240,7 @@ public class PolyProtectUtils {
         String[] input = new String[]{name};
         ProfileService profiles = WGBukkit.getPlugin().getProfileService();
         DomainInputResolver resolver = new DomainInputResolver(profiles, input);
-        resolver.setLocatorPolicy(UserLocatorPolicy.UUID_AND_NAME);
+        resolver.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
         ListenableFuture<DefaultDomain> future = executor.submit(resolver);
 
         // Add a callback using Guava
