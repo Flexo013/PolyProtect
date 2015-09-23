@@ -114,6 +114,23 @@ public class PolyProtectCommand implements CommandExecutor {
                 }
                 PolyProtectUtils.removeProtection(player);
                 return true;
+            case "resize":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(PolyProtect.pluginChatPrefix(false) + "Go away Johnsole, nobody likes you.");
+                    return true;
+                }
+                player = (Player) sender;
+
+                if (!player.hasPermission("pgc.prot.admin")) {
+                    player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You don't have permission to resize protections!");
+                    return true;
+                }
+
+                if (args.length != 1) {
+                    return false;
+                }
+                PolyProtectUtils.resizeProtection(player);
+                return true;
             case "info":
             case "i":
                 if (args.length != 1) {
@@ -245,6 +262,7 @@ public class PolyProtectCommand implements CommandExecutor {
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot create [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Create a protection for the specified player using your WorldEdit selection.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot select" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Select the protection you are standing in (for deletion).\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot delete" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Delete the selected protection.\n"
+                            + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot resize" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Resize the selected protection using your WorldEdit selection as the new protection.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot allow [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Give access to the specified player to build in your protection.\n"
                             + ChatColor.GRAY + "| " + ChatColor.GOLD + "/prot deny [player]" + ChatColor.GRAY + ": " + ChatColor.AQUA + "Revoke access from the specified player to build in your protection.\n"
                             + ChatColor.GRAY + "__________" + ChatColor.GREEN + "PolyProtect" + ChatColor.GRAY + "__________");

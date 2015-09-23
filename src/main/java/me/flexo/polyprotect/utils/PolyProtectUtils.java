@@ -304,4 +304,10 @@ public class PolyProtectUtils {
         }
         return 0;
     }
+
+    public static void resizeProtection(Player player) {
+        ProtectedRegion protection = selectedRegionMap.get(player.getName());
+        player.performCommand("region redefine " + protection.getId());
+        player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been resized using your current selection.");
+    }
 }
