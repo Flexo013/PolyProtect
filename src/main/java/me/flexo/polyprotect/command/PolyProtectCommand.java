@@ -280,8 +280,8 @@ public class PolyProtectCommand implements CommandExecutor {
         int maxCreativeCount = PolyProtectUtils.getMaxProtectionCount(owner, WorldType.CREATIVE);
         sender.sendMessage(ChatColor.BLUE + "---- " + ChatColor.DARK_AQUA + "Player " + ChatColor.RED + owner.getName() + ChatColor.BLUE + " ----\n"
                 + ChatColor.DARK_AQUA + "Total Protections: " + ChatColor.BLUE + (survivalCount + creativeCount) + "\n"
-                + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + survivalCount + " out of " + maxSurvivalCount + "\n"
-                + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + creativeCount + " out of " + maxCreativeCount);
+                + ChatColor.DARK_AQUA + "Survival Protections: " + ChatColor.BLUE + "using " + survivalCount + " out of " + maxSurvivalCount + "\n"
+                + ChatColor.DARK_AQUA + "Creative Protections: " + ChatColor.BLUE + "using " + creativeCount + " out of " + maxCreativeCount);
     }
 
     public static boolean isInteger(String str) {
