@@ -182,11 +182,11 @@ public class PolyProtectUtils {
         ProtectedRegion protection = selectedRegionMap.get(player.getName());
         if (protection == null) {
             player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a protection!");
-            return;
+        }else{
+            player.performCommand("region remove " + protection.getId());
+            selectedRegionMap.remove(player.getName());
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been removed.");
         }
-        player.performCommand("region remove " + protection.getId());
-        selectedRegionMap.remove(player.getName());
-        player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been removed.");
     }
 
     public static void sendProtectionInfo(Player player) {
@@ -199,12 +199,22 @@ public class PolyProtectUtils {
 
     public static void addMemberToProtection(Player sender, String newMemberName) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
-        addMemberFromName(newMemberName, selectedRegionMap.get(sender.getName()), sender);
+        ProtectedRegion protection = selectedRegionMap.get(sender.getName());
+        if(protection == null){
+            sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a protection!");
+        }else{
+            addMemberFromName(newMemberName, protection, sender);
+        }
     }
 
     public static void removeMemberFromProtection(Player sender, String memberToRemove) {
         RegionManager rgm = WGBukkit.getRegionManager(Bukkit.getServer().getWorld(sender.getWorld().getName()));
-        removeMemberFromName(memberToRemove, selectedRegionMap.get(sender.getName()), sender);
+        ProtectedRegion protection = selectedRegionMap.get(sender.getName());
+        if(protection == null){
+            sender.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a protection!");
+        }else{
+            removeMemberFromName(memberToRemove, protection, sender);
+        }
     }
 
     public static void removeMemberFromName(String name, final ProtectedRegion region, final Player sender) {
@@ -307,7 +317,11 @@ public class PolyProtectUtils {
 
     public static void resizeProtection(Player player) {
         ProtectedRegion protection = selectedRegionMap.get(player.getName());
-        player.performCommand("region redefine " + protection.getId());
-        player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been resized using your current selection.");
+        if(protection == null){
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.RED + "You didn't select a protection!");
+        }else{
+            player.performCommand("region redefine " + protection.getId());
+            player.sendMessage(PolyProtect.pluginChatPrefix(true) + ChatColor.GREEN + "The selected protection has been resized using your current selection.");
+        }
     }
 }
